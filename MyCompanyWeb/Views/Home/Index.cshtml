@@ -1,0 +1,61 @@
+﻿@model ProductDisplayModel
+@{
+}
+<div class="my-2">
+    <form  asp-controller="Customer" asp-action="Index" class="row row-cols-lg-auto g-3 align-items-center">
+        <div class="col-12">
+            <label class="visually-hidden" for="typeId">Types</label>
+            <select class="form-select" id="typeId" name="typeId">
+                <option selected>Choose...</option>
+                @foreach (var type in Model.Types)
+                {
+                    <option selected="@(type.Id == Model.TypeId)" value="@type.Id">@type.Name</option>
+                }
+            </select>
+        </div>
+        <div class="col-12">
+            <label class="visually-hidden" for="sterm">Search by Name</label>
+            <div class="input-group">
+                <div class="input-group-text"></div>
+                <input type="text" class="form-control" value="@Model.STerm" id="sterm" name="sterm" placeholder="Search by Name">
+            </div>
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <a href="/Home/Index" class="btn btn-dark">Reset</a>
+        </div>
+    </form>
+</div>
+<div class="w-100 d-flex flex-wrap">
+    @*table*@
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Type</th>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Price</th>
+                <th scope="col">Serial Number</th>
+                <th scope="col">In Stock</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var product in Model.Products)
+            {
+            <tr>
+                <th scope="row">@product.ProductType</th>
+                <td>@product.Name</td>
+                <td>@product.Description</td>
+                <td>@product.Price$</td>
+                <td>@product.SerialNumber</td>
+                <td>@product.InStock</td>
+                <td><a href="/Home/Details?id=@product.Id&&redirect=1"class="btn btn-primary">See Details</a></td>
+                <td><a href="/Home/Edit?id=@product.Id&&redirect=1"class="btn btn-primary">Edit</a></td>
+                <td><a href="/Home/Delete?id=@product.Id&&redirect=1"class="btn btn-primary">Delete</a></td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

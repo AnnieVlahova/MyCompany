@@ -1,0 +1,51 @@
+﻿@model SupplierDisplayModel
+@{
+}
+<div class="my-2">
+    <form asp-action="Index" class="row row-cols-lg-auto g-3 align-items-center">
+        <div class="col-12">
+            <label class="visually-hidden" for="sterm">Search by Country</label>
+            <div class="input-group">
+                <div class="input-group-text"></div>
+                <input type="text" class="form-control" value="@Model.CountryName" id="countryName" name="countryName" placeholder="Search by Country">
+            </div>
+        </div>
+        <div class="col-12">
+            <label class="visually-hidden" for="sterm">Search by Name</label>
+            <div class="input-group">
+                <div class="input-group-text"></div>
+                <input type="text" class="form-control" value="@Model.STerm" id="sterm" name="sterm" placeholder="Search by Name">
+            </div>
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <a href="/Home/Index" class="btn btn-dark">Reset</a>
+        </div>
+    </form>
+</div>
+<div class="w-100 d-flex flex-wrap">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Country</th>
+                <th scope="col">Name</th>
+                <th scope="col">City</th>
+                <th scope="col">Email</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var supplier in Model.Suppliers)
+            {
+            <tr>
+                <th scope="row">@supplier.Country</th>
+                <td>@supplier.Name</td>
+                <td>@supplier.City</td>
+                <td>@supplier.Email</td>
+                <td href="#" class="btn btn-primary">See Details</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

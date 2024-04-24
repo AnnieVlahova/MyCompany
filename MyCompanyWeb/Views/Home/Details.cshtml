@@ -1,0 +1,39 @@
+﻿@model Product
+@{
+}
+<div class="my-2" asp-action="Details">
+    <p>Details for @Model.Name</p>
+    <form>
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <div type="text" class="form-control" id="name" readonly>@Model.Name</div>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <div type="text" class="form-control" id="description" readonly>@Model.Description</div>
+        </div>
+        <div class="mb-3">
+            <label for="supplier" class="form-label">Supplier</label>
+            <div type="text" class="form-control" id="supplier" readonly>@Model.SupplierName</div>
+        </div>
+        <div class="mb-3">
+            <label for="serialNumber" class="form-label">Serial Number</label>
+            <div type="text" class="form-control" id="serialNumber" readonly>@Model.SerialNumber</div>
+        </div>
+        <div class="mb-3">
+            <label for="price" class="form-label">Price</label>
+            <div type="text" class="form-control" id="price" readonly>@Model.Price</div>
+        </div>
+        <div class="mb-3">
+            <label for="inStock" class="form-label">In Stock</label>
+            <div type="text" class="form-control" id="inStock" readonly>@Model.InStock</div>
+        </div>
+        <div class="form-group">
+            @*@if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+            {
+                <a class="btn btn-outline-success float-right" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+            }*@
+            <a href="/Home/Index" class="btn btn-outline-secondary">Show All</a>
+        </div>
+    </form>
+</div>

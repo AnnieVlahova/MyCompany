@@ -1,0 +1,48 @@
+﻿@model CustomerDisplayModel
+@{
+}
+<div class="my-2">
+    <form asp-action="Index" class="row row-cols-lg-auto g-3 align-items-center">
+        <div class="col-12">
+            <label class="visually-hidden" for="sterm">Search by City</label>
+            <div class="input-group">
+                <div class="input-group-text"></div>
+                <input type="text" class="form-control" value="@Model.CityName" id="cityName" name="cityName" placeholder="Search by City">
+            </div>
+        </div>
+        <div class="col-12">
+            <label class="visually-hidden" for="sterm">Search by Name</label>
+            <div class="input-group">
+                <div class="input-group-text"></div>
+                <input type="text" class="form-control" value="@Model.STerm" id="sterm" name="sterm" placeholder="Search by Name">
+            </div>
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <a href="/Customer/Index" class="btn btn-dark">Reset</a>
+        </div>
+    </form>
+</div>
+<div class="w-100 d-flex flex-wrap">
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">City</th>
+                <th scope="col">Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in Model.Customers)
+            {
+            <tr>
+                <td scope="row">@customer.City</td>
+                <td>@customer.Name</td>
+                <td><a href="/Customer/Details?id=@customer.Id&&redirect=1"class="btn btn-primary">See Details</a></td>
+                <td><a href="/Customer/Edit?id=@customer.Id&&redirect=1"class="btn btn-primary">Edit</a></td>
+                <td><a href="/Customer/Delete?id=@customer.Id&&redirect=1"class="btn btn-primary">Delete</a></td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
