@@ -1,0 +1,51 @@
+﻿@model AddProductDisplayModel
+@{
+}
+<div class="my-2"> 
+    <p>Add Product</p>
+    <form method="post" asp-action="Add" enctype="multipart/form-data">
+        <input type="hidden" id="ProductTypeId" name="ProductTypeId" asp-for="ProductTypeId" />
+        <input type="hidden" id="SupplierId" name="SupplierId" asp-for="SupplierId" />
+        <input type="hidden" id="ProductType" name="ProductType" asp-for="ProductType" />
+        <input type="hidden" id="Supplier" name="Supplier" asp-for="Supplier" />
+        <div class="mb-3">
+            <input asp-for="Name" class="form-control form-control-lg" placeholder="Name" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <input asp-for="Description" class="form-control form-control-lg" placeholder="Description" />
+            <span asp-validation-for="Description" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <input asp-for="SerialNumber" class="form-control form-control-lg" placeholder="SerialNumber" />
+            <span asp-validation-for="SerialNumber" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <input asp-for="Price" class="form-control form-control-lg" placeholder="Price" />
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <input asp-for="Discount" class="form-control form-control-lg" placeholder="Discount" />
+            <span asp-validation-for="Discount" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <input asp-for="InStock" class="form-control form-control-lg" placeholder="InStock" />
+            <span asp-validation-for="InStock" class="text-danger"></span>
+        </div>
+        <div class="mb-3">                        
+        <select class="form-control form-control-lg" asp-items="Model.ProductTypes" asp-for="ProductTypeSelected"> 
+            <option value="-1">---Select Product Type---</option>
+        </select>
+        </div>
+        <div class="mb-3">                        
+        <select class="form-control form-control-lg" asp-items="Model.Suppliers" asp-for="SupplierSelected"> 
+            <option value="-1">---Select Supplier---</option>
+        </select>
+        </div>
+        <div class="form-row form-group">
+            <div class="col">
+                 <button class="btn btn-block btn-success btn-lg" type="submit">Add Product</button>
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,0 +1,45 @@
+﻿@model AddCustomerDisplayModel
+@{
+}
+<div class="my-2"> 
+    <p>Add Customer</p>
+    <form method="post" asp-action="Add" enctype="multipart/form-data">
+        <div class="mb-3">
+            <input asp-for="Name" class="form-control form-control-lg" placeholder="Name" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <input asp-for="Email" class="form-control form-control-lg" placeholder="Email" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <input asp-for="Director" class="form-control form-control-lg" placeholder="Director" />
+            <span asp-validation-for="Director" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <input asp-for="Country" class="form-control form-control-lg" placeholder="Country" />
+            <span asp-validation-for="Country" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <input asp-for="City" class="form-control form-control-lg" placeholder="City" />
+            <span asp-validation-for="City" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <input asp-for="Address" class="form-control form-control-lg" placeholder="Address" />
+            <span asp-validation-for="Address" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <input asp-for="CustomerCode" class="form-control form-control-lg" placeholder="Customer Code" />
+            <span asp-validation-for="CustomerCode" class="text-danger"></span>
+        </div>
+         <div class="mb-3">
+            <input asp-for="CustomerCountryCode" class="form-control form-control-lg" placeholder="Customer Country Code" />
+            <span asp-validation-for="CustomerCountryCode" class="text-danger"></span>
+        </div>
+        <div class="form-row form-group">
+            <div class="col">
+                 <button class="btn btn-block btn-success btn-lg" type="submit">Add Customer</button>
+            </div>
+        </div>
+    </form>
+</div>

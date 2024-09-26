@@ -38,6 +38,34 @@ namespace MyCompanyWeb.Controllers
             Customer customerDetails = await _customerRepository.GetById(id);
             return View(customerDetails);
         }
+        [HttpGet]
+        public IActionResult Add()
+        {
+            var customerDM = new AddCustomerDisplayModel();
+            return View(customerDM);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Add(AddCustomerDisplayModel customerDM)
+        {
+            if(!ModelState.IsValid)
+            {
+                return View(customerDM);
+            }
+            var customer = new Customer
+            {
+                Name = customerDM.Name,
+                Email = customerDM.Email,
+                Director = customerDM.Director,
+                Country = customerDM.Country,
+                City = customerDM.City,
+                Address = customerDM.Address,
+                CustomerCode = customerDM.CustomerCode,
+                CustomerCountryCode = customerDM.CustomerCountryCode
+            };
+            _customerRepository.Add(customer);
+            return RedirectToAction("Index");
+
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

@@ -1,6 +1,5 @@
 ﻿@model Product
-@{
-}
+
 <div class="my-2" asp-action="Details">
     <p>Details for @Model.Name</p>
     <form>
@@ -9,12 +8,16 @@
             <div type="text" class="form-control" id="name" readonly>@Model.Name</div>
         </div>
         <div class="mb-3">
+            <label for="name" class="form-label">Product Type</label>
+            <div type="text" class="form-control" id="name" readonly>@Model.ProductType.Name</div>
+        </div>
+        <div class="mb-3">
             <label for="description" class="form-label">Description</label>
             <div type="text" class="form-control" id="description" readonly>@Model.Description</div>
         </div>
         <div class="mb-3">
             <label for="supplier" class="form-label">Supplier</label>
-            <div type="text" class="form-control" id="supplier" readonly>@Model.SupplierName</div>
+            <div type="text" class="form-control" id="supplier" readonly>@Model.Supplier.Name</div>
         </div>
         <div class="mb-3">
             <label for="serialNumber" class="form-label">Serial Number</label>

@@ -17,7 +17,6 @@ namespace MyCompanyWeb.Models
         [Required]
         public string? City { get; set; }
         public string? Address { get; set; }
-
         public List<Product>? Products { get; set; }
     }
 }

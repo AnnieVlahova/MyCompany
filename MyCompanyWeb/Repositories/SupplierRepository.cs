@@ -13,17 +13,10 @@ namespace MyCompanyWeb.Repositories
         {
             if (!String.IsNullOrEmpty(sTerm))
                 sTerm = sTerm.ToLower();
-            IEnumerable<Supplier> suppliers = await (from supplier in _db.Suppliers
-                                                     where String.IsNullOrEmpty(sTerm) ||
-                                                     (supplier != null && supplier.Name.ToLower().StartsWith(sTerm))
-                                                     select new Supplier
-                                                     {
-                                                         Id = supplier.Id,
-                                                         Name = supplier.Name,
-                                                         Country = supplier.Country,
-                                                         City = supplier.City,
-                                                         Email = supplier.Email
-                                                     }).ToListAsync();
+
+            IEnumerable<Supplier> suppliers = await _db.Suppliers
+                .Where(s => String.IsNullOrEmpty(sTerm) || s.Name.ToLower().StartsWith(sTerm)).ToListAsync();
+
             if (!String.IsNullOrEmpty(countryName))
             {
                 suppliers = suppliers.Where(x => x.Country.ToLower().StartsWith(countryName)).ToList();

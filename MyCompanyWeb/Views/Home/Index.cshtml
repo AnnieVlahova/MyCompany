@@ -24,6 +24,7 @@
         <div class="col-12">
             <button type="submit" class="btn btn-primary">Submit</button>
             <a href="/Home/Index" class="btn btn-dark">Reset</a>
+            <a asp-controller="Home" asp-action="Add" class="btn btn-primary">Add</a>
         </div>
     </form>
 </div>
@@ -45,7 +46,7 @@
             @foreach (var product in Model.Products)
             {
             <tr>
-                <th scope="row">@product.ProductType</th>
+                <th scope="row">@product.ProductType.Name</th>
                 <td>@product.Name</td>
                 <td>@product.Description</td>
                 <td>@product.Price$</td>

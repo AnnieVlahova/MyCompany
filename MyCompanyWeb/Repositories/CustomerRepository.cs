@@ -13,19 +13,7 @@ namespace MyCompanyWeb.Repositories
         {
             if (!String.IsNullOrEmpty(sTerm))
                 sTerm = sTerm.ToLower();
-            IEnumerable<Customer> customers = await (from customer in _db.Customers
-                                                     where String.IsNullOrEmpty(sTerm) ||
-                                                     (customer != null && customer.Name.ToLower().StartsWith(sTerm))
-                                                     select new Customer
-                                                     {
-                                                         Id = customer.Id,
-                                                         Name = customer.Name,
-                                                         Country = customer.Country,
-                                                         City = customer.City,
-                                                         Email = customer.Email,
-                                                         Director = customer.Director,
-                                                         CustomerCode = customer.CustomerCode
-                                                     }).ToListAsync();
+            IEnumerable<Customer> customers = await _db.Customers.Where(a => a.Name.ToLower().StartsWith(sTerm) || String.IsNullOrEmpty(sTerm)).ToListAsync();
             if(!String.IsNullOrEmpty(cityName))
             {
                 customers = customers.Where(x => x.City.ToLower().StartsWith(cityName)).ToList();
@@ -37,6 +25,26 @@ namespace MyCompanyWeb.Repositories
             Customer customer = await _db.Customers.FirstOrDefaultAsync(c => c.Id == id);
             return customer;
 
+        }
+        public bool Add(Customer customer)
+        {
+            _db.Add(customer);
+            return Save();
+        }
+        public bool Delete(Customer customer)
+        {
+            _db.Remove(customer);
+            return Save();
+        }
+        public bool Edit(Customer customer)
+        {
+            _db.Update(customer);
+            return Save();
+        }
+        public bool Save()
+        {
+            var saved = _db.SaveChanges();
+            return saved > 0 ? true : false;
         }
     }
 }

@@ -19,10 +19,9 @@ namespace MyCompanyWeb.Models
         [Required]
         public string? City { get; set; }
         public string? Address { get; set; }
+        public string? CustomerCode { get; set; }
         [Required]
-        public int CustomerCode { get; set; }
-        [Required]
-        public int CustomerCountryCode { get; set; }
+        public string? CustomerCountryCode { get; set; }
         public List<Order>? Orders { get; set; }
 
     }

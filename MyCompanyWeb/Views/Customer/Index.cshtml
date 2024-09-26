@@ -21,6 +21,7 @@
         <div class="col-12">
             <button type="submit" class="btn btn-primary">Submit</button>
             <a href="/Customer/Index" class="btn btn-dark">Reset</a>
+            <a asp-controller="Customer" asp-action="Add" class="btn btn-primary">Add</a>
         </div>
     </form>
 </div>
@@ -38,9 +39,9 @@
             <tr>
                 <td scope="row">@customer.City</td>
                 <td>@customer.Name</td>
-                <td><a href="/Customer/Details?id=@customer.Id&&redirect=1"class="btn btn-primary">See Details</a></td>
-                <td><a href="/Customer/Edit?id=@customer.Id&&redirect=1"class="btn btn-primary">Edit</a></td>
-                <td><a href="/Customer/Delete?id=@customer.Id&&redirect=1"class="btn btn-primary">Delete</a></td>
+                <td><a type="button" asp-controller="Customer" asp-action="Details" asp-route-id="@customer.Id" class="btn btn-primary">See Details</a></td>
+                <td><a type="button" asp-controller="Customer" asp-action="Update" asp-route-id="@customer.Id" class="btn btn-primary">Edit</a></td>
+                <td><a type="button" asp-controller="Customer" asp-action="Delete" asp-route-id="@customer.Id" class="btn btn-primary">Delete</a></td>
             </tr>
             }
         </tbody>
