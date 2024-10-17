@@ -28,11 +28,6 @@ namespace MyCompanyWeb.Controllers
             Supplier supplierDetails = await _supplierRepository.GetById(id);
             return View(supplierDetails);
         }
-        public async Task<IActionResult> Edit(int id)
-        {
-            Supplier supplierDetails = await _supplierRepository.GetById(id);
-            return View(supplierDetails);
-        }
         public async Task<IActionResult> Delete(int id)
         {
             Supplier supplierDetails = await _supplierRepository.GetById(id);
@@ -62,7 +57,41 @@ namespace MyCompanyWeb.Controllers
             _supplierRepository.Add(supplier);
             return RedirectToAction("Index");
         }
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            Supplier supplier = await _supplierRepository.GetById(id);
+            var supplierDM = new EditSupplierDisplayModel
+            {
+                Name = supplier.Name,
+                Email = supplier.Email,
+                Country = supplier.Country,
+                City = supplier.City,
+                Address = supplier.Address
+            };
 
+            return View(supplierDM);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, EditSupplierDisplayModel supplierDM)
+        {
+            if(!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Failed to edit supplier");
+                return View("Edit", supplierDM);
+            }
+            var supplier= new Supplier
+            {
+                Id = id,
+                Name = supplierDM.Name,
+                Email = supplierDM.Email,
+                Country = supplierDM.Country,
+                City = supplierDM.City,
+                Address = supplierDM.Address
+            };
+            _supplierRepository.Edit(supplier);
+            return RedirectToAction("Index");
+        }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

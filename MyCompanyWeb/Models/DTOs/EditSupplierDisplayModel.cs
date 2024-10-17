@@ -1,6 +1,6 @@
 ﻿namespace MyCompanyWeb.Models.DTOs
 {
-    public class AddSupplierDisplayModel
+    public class EditSupplierDisplayModel
     {
         public string? Name { get; set; }
         public string? Email { get; set; }

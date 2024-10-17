@@ -23,7 +23,7 @@ namespace MyCompanyWeb.Models
         public ProductType? ProductType { get; set; }
 
         [ForeignKey("Supplier")]
-        public int? SupplierId { get; set; }
+        public int SupplierId { get; set; }
         public Supplier? Supplier { get; set; }
         public string? Image { get; set; }
         public List<OrderProduct>? OrderProducts { get; set; }

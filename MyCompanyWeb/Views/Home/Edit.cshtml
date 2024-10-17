@@ -1,9 +1,9 @@
-﻿@model AddProductDisplayModel
+﻿@model EditProductDisplayModel
 @{
 }
 <div class="my-2"> 
-    <p>Add Product</p>
-    <form method="post" asp-action="Add" enctype="multipart/form-data">
+    <p>Edit</p>
+    <form method="post" asp-action="Edit" enctype="multipart/form-data">
         <input type="hidden" id="ProductTypeId" name="ProductTypeId" asp-for="ProductTypeId" />
         <input type="hidden" id="SupplierId" name="SupplierId" asp-for="SupplierId" />
         <input type="hidden" id="ProductType" name="ProductType" asp-for="ProductType" />
@@ -40,19 +40,17 @@
         </div>
         <div class="mb-3">
         <label asp-for="ProductTypeSelected">Product Type</label>
-        <select class="form-control form-control-lg" asp-items="Model.ProductTypes" asp-for="ProductTypeSelected"> 
-            <option value="-1">---Select Product Type---</option>
+        <select class="form-control form-control-lg" asp-items="Model.ProductTypes" asp-for="ProductTypeSelected">
         </select>
         </div>
         <div class="mb-3">
         <label asp-for="SupplierSelected">Supplier</label>
-        <select class="form-control form-control-lg" asp-items="Model.Suppliers" asp-for="SupplierSelected"> 
-            <option value="-1">---Select Supplier---</option>
+        <select class="form-control form-control-lg" asp-items="Model.Suppliers" asp-for="SupplierSelected">
         </select>
         </div>
         <div class="form-row form-group">
             <div class="col">
-                 <button class="btn btn-block btn-success btn-lg" type="submit">Add Product</button>
+                 <button class="btn btn-block btn-success btn-lg" type="submit">Edit</button>
             </div>
         </div>
     </form>

@@ -28,10 +28,51 @@ namespace MyCompanyWeb.Controllers
             Customer customerDetails = await _customerRepository.GetById(id);
             return View(customerDetails);
         }
+        [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            Customer customerDetails = await _customerRepository.GetById(id);
-            return View(customerDetails);
+            Customer customer = await _customerRepository.GetById(id);
+            if (customer == null)
+                return View("Error");
+            var customerDM = new EditCustomerDisplayModel
+            {
+                Name = customer.Name,
+                Email = customer.Email,
+                Country = customer.Country,
+                City = customer.City,
+                Address = customer.Address,
+                Director = customer.Director,
+                CustomerCode = customer.CustomerCode,
+                CustomerCountryCode = customer.CustomerCountryCode
+            };
+            return View(customerDM);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, EditCustomerDisplayModel customerDM)
+        {
+            if(!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Failed to edit customer");
+                return View("Edit", customerDM);
+            }
+
+            var customer = new Customer
+            {
+                Id = id,
+                Name = customerDM.Name,
+                Email = customerDM.Email,
+                Director = customerDM.Director,
+                Country = customerDM.Country,
+                City = customerDM.City,
+                Address = customerDM.Address,
+                CustomerCode = customerDM.CustomerCode,
+                CustomerCountryCode = customerDM.CustomerCountryCode
+            };
+
+            _customerRepository.Edit(customer);
+            return RedirectToAction("Index");
+
+            
         }
         public async Task<IActionResult> Delete(int id)
         {

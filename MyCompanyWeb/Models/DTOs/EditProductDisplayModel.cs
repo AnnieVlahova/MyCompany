@@ -2,8 +2,9 @@
 
 namespace MyCompanyWeb.Models.DTOs
 {
-    public class AddProductDisplayModel
+    public class EditProductDisplayModel
     {
+        public string Id { get; set; }
         public string? Name { get; set; }
         public string? Description { get; set; }
         public int? SerialNumber { get; set; }
@@ -20,6 +21,5 @@ namespace MyCompanyWeb.Models.DTOs
         public string? ProductTypeSelected { get; set; }
         public List<SelectListItem>? Suppliers { get; set; }
         public string? SupplierSelected { get; set; }
-
     }
 }

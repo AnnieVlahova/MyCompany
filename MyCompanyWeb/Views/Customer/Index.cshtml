@@ -34,6 +34,8 @@
                 <th scope="col">City</th>
                 <th scope="col">Address</th>
                 <th scope="col">Director</th>
+                <th scope="col">Customer Code</th>
+                <th scope="col">Customer Country Code</th>
             </tr>
         </thead>
         <tbody>
@@ -45,8 +47,10 @@
                 <td>@customer.City</td>
                 <td>@customer.Address</td>
                 <td>@customer.Director</td>
+                <td>@customer.CustomerCode</td>
+                <td>@customer.CustomerCountryCode</td>
                 <td><a type="button" asp-controller="Customer" asp-action="Details" asp-route-id="@customer.Id" class="btn btn-primary">See Details</a></td>
-                <td><a type="button" asp-controller="Customer" asp-action="Update" asp-route-id="@customer.Id" class="btn btn-primary">Edit</a></td>
+                <td><a type="button" asp-controller="Customer" asp-action="Edit" asp-route-id="@customer.Id" class="btn btn-primary">Edit</a></td>
                 <td><a type="button" asp-controller="Customer" asp-action="Delete" asp-route-id="@customer.Id" class="btn btn-primary">Delete</a></td>
             </tr>
             }

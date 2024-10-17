@@ -1,9 +1,9 @@
-﻿@model AddCustomerDisplayModel
+﻿@model AddSupplierDisplayModel
 @{
 }
 <div class="my-2"> 
-    <p>Add Customer</p>
-    <form method="post" asp-action="Add" enctype="multipart/form-data">
+    <p>Edit</p>
+    <form method="post" asp-action="Edit" enctype="multipart/form-data">
         <div class="mb-3">
             <label asp-for="Name">Name</label>
             <input asp-for="Name" class="form-control form-control-lg" placeholder="Name" />
@@ -13,11 +13,6 @@
             <label asp-for="Email">Email</label>
             <input asp-for="Email" class="form-control form-control-lg" placeholder="Email" />
             <span asp-validation-for="Email" class="text-danger"></span>
-        </div>
-        <div class="mb-3">
-            <label asp-for="Director">Director</label>
-            <input asp-for="Director" class="form-control form-control-lg" placeholder="Director" />
-            <span asp-validation-for="Director" class="text-danger"></span>
         </div>
         <div class="mb-3">
             <label asp-for="Country">Country</label>
@@ -34,19 +29,9 @@
             <input asp-for="Address" class="form-control form-control-lg" placeholder="Address" />
             <span asp-validation-for="Address" class="text-danger"></span>
         </div>
-        <div class="mb-3">
-            <label asp-for="CustomerCode">CustomerCode</label>
-            <input asp-for="CustomerCode" class="form-control form-control-lg" placeholder="Customer Code" />
-            <span asp-validation-for="CustomerCode" class="text-danger"></span>
-        </div>
-         <div class="mb-3">
-             <label asp-for="CustomerCountryCode">CustomerCountryCode</label>
-            <input asp-for="CustomerCountryCode" class="form-control form-control-lg" placeholder="Customer Country Code" />
-            <span asp-validation-for="CustomerCountryCode" class="text-danger"></span>
-        </div>
         <div class="form-row form-group">
             <div class="col">
-                 <button class="btn btn-block btn-success btn-lg" type="submit">Add Customer</button>
+                 <button class="btn btn-block btn-success btn-lg" type="submit">Edit</button>
             </div>
         </div>
     </form>

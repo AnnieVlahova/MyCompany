@@ -36,11 +36,6 @@ namespace MyCompanyWeb.Controllers
             Product productDetails = await _homeRepository.GetProductById(id);
             return View(productDetails);
         }
-        public async Task<IActionResult> Edit(int id)
-        {
-            Product productDetails = await _homeRepository.GetProductById(id);
-            return View(productDetails);
-        }
         public async Task<IActionResult> Delete(int id)
         {
             Product productDetails = await _homeRepository.GetProductById(id);
@@ -51,25 +46,38 @@ namespace MyCompanyWeb.Controllers
         {
             return View();
         }
+        private void populateSuppliersAndType(IEnumerable<ProductType> prodTypes, IEnumerable<Supplier> suppliers, ref List<SelectListItem> prodTypesL,
+            ref List<SelectListItem> suppliersL, int productTypeId = -1, int supplierId = -1)
+        {
+
+            foreach (var prodType in prodTypes)
+            { 
+                prodTypesL.Add(new SelectListItem { Selected = prodType.Id == productTypeId, Text = prodType.Name, Value = prodType.Id.ToString() });
+            }
+            
+            foreach (var supp in suppliers)
+            {
+                suppliersL.Add(new SelectListItem { Selected = supp.Id == supplierId, Text = supp.Name, Value = supp.Id.ToString() });
+            }
+
+            prodTypesL = prodTypesL.OrderByDescending(p => p.Selected).ToList();
+            suppliersL = suppliersL.OrderByDescending(s => s.Selected).ToList();
+        }
 
         [HttpGet]
         public async Task<IActionResult> Add()
         {
             var productDM = new AddProductDisplayModel();
+
             var prodTypes = await _homeRepository.Types();
-
-            productDM.ProductTypes = new List<SelectListItem>();
-            foreach(var prodType in prodTypes)
-            {
-                productDM.ProductTypes.Add(new SelectListItem { Text = prodType.Name, Value = prodType.Id.ToString() });
-            }
             var suppliers = await _homeRepository.Suppliers();
-            productDM.Suppliers = new List<SelectListItem>();
-            foreach(var supp in suppliers)
-            {
-                productDM.Suppliers.Add(new SelectListItem { Text = supp.Name, Value = supp.Id.ToString() });
-            }
 
+            var prodTypesL = new List<SelectListItem>();
+            var suppliersL = new List<SelectListItem>();
+            populateSuppliersAndType(prodTypes, suppliers,ref prodTypesL, ref suppliersL);
+            productDM.ProductTypes = prodTypesL;
+            productDM.Suppliers = suppliersL;
+            
             return View(productDM);
         }
         [HttpPost]
@@ -108,6 +116,75 @@ namespace MyCompanyWeb.Controllers
             _homeRepository.Add(product);
             return RedirectToAction("Index");
 
+        }
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var product = await _homeRepository.GetProductById(id);
+            if (product == null)
+                return View("Error");
+            var prodTypes = await _homeRepository.Types();
+            var suppliers = await _homeRepository.Suppliers();
+            var prodTypesL = new List<SelectListItem>();
+            var suppliersL = new List<SelectListItem>();
+            populateSuppliersAndType(prodTypes, suppliers, ref prodTypesL, ref suppliersL, product.ProductTypeId, product.SupplierId);
+            var productDM = new EditProductDisplayModel
+            {
+                Name = product.Name,
+                Description = product.Description,
+                SerialNumber = product.SerialNumber,
+                Price = product.Price,
+                InStock = product.InStock,
+                Discount = product.Discount,
+                ProductTypeId = product.ProductTypeId,
+                ProductType = product.ProductType,
+                SupplierId = product.SupplierId,
+                Supplier = product.Supplier,
+                Suppliers = suppliersL,
+                ProductTypes = prodTypesL,
+                SupplierSelected = product.Supplier.Name,
+                ProductTypeSelected = product.ProductType.Name
+            };
+            return View(productDM);
+
+        }
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, EditProductDisplayModel productDM)
+        {
+            if(!ModelState.IsValid)
+            {
+                ModelState.AddModelError("", "Failed to edit product");
+                return View("Edit", productDM);
+            }
+            int selectedProductType = Int32.Parse(productDM.ProductTypeSelected);
+            if (selectedProductType > -1)
+            {
+                productDM.ProductTypeId = selectedProductType;
+                productDM.ProductType = await _homeRepository.GetProductTypeById(selectedProductType);
+            }
+            int selectedSupplier = Int32.Parse(productDM.SupplierSelected);
+            if (selectedSupplier > -1)
+            {
+                productDM.SupplierId = selectedSupplier;
+                productDM.Supplier = await _homeRepository.GetSupplierById(selectedSupplier);
+            }
+            var product = new Product
+            {
+                Id = id,
+                Name = productDM.Name,
+                Description = productDM.Description,
+                SerialNumber = productDM.SerialNumber,
+                Price = productDM.Price,
+                InStock = productDM.InStock,
+                Discount = productDM.Discount,
+                ProductTypeId = productDM.ProductTypeId,
+                ProductType = productDM.ProductType,
+                SupplierId = productDM.SupplierId,
+                Supplier = productDM.Supplier
+            };
+
+            _homeRepository.Edit(product);
+            return RedirectToAction("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
