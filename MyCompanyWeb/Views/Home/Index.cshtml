@@ -39,6 +39,7 @@
                 <th scope="col">Price</th>
                 <th scope="col">Serial Number</th>
                 <th scope="col">In Stock</th>
+                <th scope="col">Supplier</th>
                 <th scope="col"></th>
             </tr>
         </thead>
@@ -52,6 +53,7 @@
                 <td>@product.Price$</td>
                 <td>@product.SerialNumber</td>
                 <td>@product.InStock</td>
+                <td>@product.Supplier.Name</td>
                 <td><a type="button" asp-controller="Home" asp-action="Details" asp-route-id="@product.Id" class="btn btn-primary">See Details</a></td>
                 <td><a type="button" asp-controller="Home" asp-action="Edit" asp-route-id="@product.Id" class="btn btn-primary">Edit</a></td>
                 <td><a type="button" asp-controller="Home" asp-action="Delete" asp-route-id="@product.Id" class="btn btn-primary">Delete</a></td>
