@@ -61,6 +61,8 @@ namespace MyCompanyWeb.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             Supplier supplier = await _supplierRepository.GetById(id);
+            if (supplier == null)
+                return View("Error");
             var supplierDM = new EditSupplierDisplayModel
             {
                 Name = supplier.Name,
