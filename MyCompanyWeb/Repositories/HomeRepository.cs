@@ -26,7 +26,7 @@ namespace MyCompanyWeb.Repositories
 
             if (!String.IsNullOrEmpty(supplierName))
             {
-                products = products.Where(s => s.Supplier.Name.StartsWith(supplierName) || String.IsNullOrEmpty(supplierName)).ToList();
+                products = products.Where(s => s.Supplier.Name.StartsWith(supplierName)).ToList();
             }
             if (typeId > 0)
             {

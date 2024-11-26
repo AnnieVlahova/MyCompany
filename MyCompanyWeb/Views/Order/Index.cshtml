@@ -1,0 +1,61 @@
+﻿@using MyCompanyWeb.Data.Enum
+@model OrderDisplayModel
+@{
+}
+<div class="my-2">
+    <form asp-controller="Order" asp-action="Index" class="row row-cols-lg-auto g-3 align-items-center">
+        <div class="col-12">
+            <label class="visually-hidden" for="orderStatus">Status</label>
+            <select class="form-select" id="orderStatus" name="orderStatus">
+                <option selected>@OrderStatus.Undefined</option>
+                @foreach (var status in Html.GetEnumSelectList<OrderStatus>())
+                {
+                    <option value="@status.Value">@status.Text</option>
+                }
+            </select>
+        </div>
+        <div class="col-12">
+            <label class="visually-hidden" for="sterm">Search by Customer</label>
+            <div class="input-group">
+                <div class="input-group-text"></div>
+                <input type="text" class="form-control" value="@Model.STerm" id="sterm" name="sterm" placeholder="Search by Customer">
+            </div>
+        </div>
+
+        <div class="col-12">
+            <button type="submit" class="btn btn-primary">Search</button>
+            <a href="/Home/Index" class="btn btn-dark">Reset</a>
+            <a asp-controller="Order" asp-action="Add" class="btn btn-primary">Add</a>
+        </div>
+    </form>
+</div>
+<div class="w-100 d-flex flex-wrap">
+    @*table*@
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Status</th>
+                <th scope="col">Customer</th>
+                <th scope="col">Ordered On</th>
+                <th scope="col">Delivery Date</th>
+                <th scope="col">Is Delivered</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model.Orders)
+            {
+            <tr>
+                <th scope="row">@order.OrderStatus</th>
+                <td>@order.Customer.Name</td>
+                <td>@order.OrderedOn</td>
+                <td>@order.DeliveryDate</td>
+                <td><div type="checkbox" class="form-control" id="isDelivered" readonly>@order.IsActive</td>
+                <td><a type="button" asp-controller="Order" asp-action="Details" asp-route-id="@order.Id" class="btn btn-primary">See Details</a></td>
+                <td><a type="button" asp-controller="Order" asp-action="Edit" asp-route-id="@order.Id" class="btn btn-primary">Edit</a></td>
+                <td><a type="button" asp-controller="Order" asp-action="Delete" asp-route-id="@order.Id" class="btn btn-primary">Delete</a></td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>

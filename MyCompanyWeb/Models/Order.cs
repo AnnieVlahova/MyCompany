@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using MyCompanyWeb.Data.Enum;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyCompanyWeb.Models
@@ -12,15 +13,10 @@ namespace MyCompanyWeb.Models
         [ForeignKey("Customer")]
         public int CustomerId { get; set; }
         public Customer? Customer { get; set; }
-
-        [ForeignKey("OrderStatus")]
-        public int? OrderStatusId { get; set; }
         public OrderStatus? OrderStatus { get; set; }
         public DateTime OrderedOn { get; set; } = DateTime.UtcNow;
-        public DateTime? DeliberyDate { get; set; }
+        public DateTime? DeliveryDate { get; set; }
         public bool? IsActive { get; set; } = false;
-        [Required]
-        public bool IsAccepted { get; set; } = false;
 
         public List<OrderProduct>? OrderProducts { get; set; }
 
