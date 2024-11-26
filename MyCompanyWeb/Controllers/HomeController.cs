@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MyCompanyWeb.Models;
+using NPOI.SS.Formula.Functions;
 using System.Diagnostics;
 
 namespace MyCompanyWeb.Controllers
@@ -45,24 +46,34 @@ namespace MyCompanyWeb.Controllers
         public IActionResult Privacy()
         {
             return View();
+
         }
-        private void populateSuppliersAndType(IEnumerable<ProductType> prodTypes, IEnumerable<Supplier> suppliers, ref List<SelectListItem> prodTypesL,
-            ref List<SelectListItem> suppliersL, int productTypeId = -1, int supplierId = -1)
+        private void populateSelectList<T>(IEnumerable<T> list, ref List<SelectListItem> selectList, int selectedVal = -1) where T : IEntity
         {
 
-            foreach (var prodType in prodTypes)
-            { 
-                prodTypesL.Add(new SelectListItem { Selected = prodType.Id == productTypeId, Text = prodType.Name, Value = prodType.Id.ToString() });
-            }
-            
-            foreach (var supp in suppliers)
+            foreach (var elem in list)
             {
-                suppliersL.Add(new SelectListItem { Selected = supp.Id == supplierId, Text = supp.Name, Value = supp.Id.ToString() });
+                selectList.Add(new SelectListItem { Selected = elem.Id == selectedVal, Text = elem.Name, Value = elem.Id.ToString() });
             }
-
-            prodTypesL = prodTypesL.OrderByDescending(p => p.Selected).ToList();
-            suppliersL = suppliersL.OrderByDescending(s => s.Selected).ToList();
+            selectList = selectList.OrderByDescending(p => p.Selected).ToList();
         }
+        //private void populateSuppliersAndType(IEnumerable<ProductType> prodTypes, IEnumerable<Supplier> suppliers, ref List<SelectListItem> prodTypesL,
+        //    ref List<SelectListItem> suppliersL, int productTypeId = -1, int supplierId = -1)
+        //{
+
+        //    foreach (var prodType in prodTypes)
+        //    { 
+        //        prodTypesL.Add(new SelectListItem { Selected = prodType.Id == productTypeId, Text = prodType.Name, Value = prodType.Id.ToString() });
+        //    }
+            
+        //    foreach (var supp in suppliers)
+        //    {
+        //        suppliersL.Add(new SelectListItem { Selected = supp.Id == supplierId, Text = supp.Name, Value = supp.Id.ToString() });
+        //    }
+
+        //    prodTypesL = prodTypesL.OrderByDescending(p => p.Selected).ToList();
+        //    suppliersL = suppliersL.OrderByDescending(s => s.Selected).ToList();
+        //}
 
         [HttpGet]
         public async Task<IActionResult> Add()
@@ -74,7 +85,9 @@ namespace MyCompanyWeb.Controllers
 
             var prodTypesL = new List<SelectListItem>();
             var suppliersL = new List<SelectListItem>();
-            populateSuppliersAndType(prodTypes, suppliers,ref prodTypesL, ref suppliersL);
+            //populateSuppliersAndType(prodTypes, suppliers,ref prodTypesL, ref suppliersL);
+            populateSelectList(prodTypes, ref prodTypesL);
+            populateSelectList(suppliers, ref suppliersL);
             productDM.ProductTypes = prodTypesL;
             productDM.Suppliers = suppliersL;
             
@@ -127,7 +140,9 @@ namespace MyCompanyWeb.Controllers
             var suppliers = await _homeRepository.Suppliers();
             var prodTypesL = new List<SelectListItem>();
             var suppliersL = new List<SelectListItem>();
-            populateSuppliersAndType(prodTypes, suppliers, ref prodTypesL, ref suppliersL, product.ProductTypeId, product.SupplierId);
+            populateSelectList(prodTypes, ref prodTypesL, product.ProductTypeId);
+            populateSelectList(suppliers, ref suppliersL, product.SupplierId);
+            //populateSuppliersAndType(prodTypes, suppliers, ref prodTypesL, ref suppliersL, product.ProductTypeId, product.SupplierId);
             var productDM = new EditProductDisplayModel
             {
                 Name = product.Name,

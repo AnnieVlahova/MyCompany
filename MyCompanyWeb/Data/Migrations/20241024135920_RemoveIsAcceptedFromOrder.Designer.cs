@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyCompanyWeb.Data;
 
@@ -11,9 +12,10 @@ using MyCompanyWeb.Data;
 namespace MyCompanyWeb.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241024135920_RemoveIsAcceptedFromOrder")]
+    partial class RemoveIsAcceptedFromOrder
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -274,7 +276,7 @@ namespace MyCompanyWeb.Data.Migrations
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("DeliveryDate")
+                    b.Property<DateTime?>("DeliberyDate")
                         .HasColumnType("datetime2");
 
                     b.Property<bool?>("IsActive")

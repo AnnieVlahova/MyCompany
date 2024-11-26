@@ -1,0 +1,93 @@
+﻿@using MyCompanyWeb.Data.Enum
+@model AddOrderDisplayModel
+@{
+}
+<div class="my-2"> 
+    <p>Add Order</p>
+    <form asp-action="Add" method="get" id="filterForm">
+    <label for="ProductType">Filter by Product Type:</label>
+    <select asp-for="SelectedProductType" asp-items="@Model.ProductTypes" onchange="this.form.submit()">
+        <option value="">All Types</option>
+    </select>
+    </form>
+
+    <form method="post" asp-action="Add" enctype="multipart/form-data">
+        <input type="hidden" id="CustomerId" name="CustomerId" asp-for="CustomerId" />
+        <input type="hidden" id="Customer" name="Customer" asp-for="Customer" />
+        <div class="mb-3">      
+        <table class="table">
+        <thead>
+            <tr>
+                <th>Select</th>
+                <th>Product Type</th>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Discount</th>
+            </tr>
+        </thead>
+        <tbody>
+             @if (Model.AllProducts != null && Model.AllProducts.Any())
+            {
+            @for (var i = 0; i < Model.AllProducts.Count; i++)
+            {
+                @if(@Model.SelectedProductType == null || (@Model.AllProducts[i].Product.ProductType.Id).ToString() == @Model.SelectedProductType)
+                {
+                    <tr>
+                    <td>
+                        <input type="checkbox" asp-for="@Model.SelectedProducts[i].Selected" />
+                        <input type="hidden" asp-for="@Model.SelectedProducts[i].ProductId" value="@Model.AllProducts[i].ProductId" />
+                    </td>
+                    <td>@Model.AllProducts[i].Product.ProductType.Name</td>
+                    <td>@Model.AllProducts[i].Product.Name</td>
+                    <td>
+                        @Model.AllProducts[i].Price
+                    <input type="hidden" asp-for="@Model.SelectedProducts[i].Price" value="@Model.AllProducts[i].Price" /></td>
+                    <td>
+                        <input type="number" asp-for="@Model.SelectedProducts[i].Quantity" min="1" value="1" />
+                    </td>
+                    <td>
+                        <input type="number" asp-for="@Model.SelectedProducts[i].Discount" min="0" value="0" />
+                    </td>
+                </tr>
+                }
+                
+            }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="3">No products found for the selected type.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    </div> 
+        <div class="mb-3">
+        <label asp-for="CustomerSelected">Customer</label>
+        <select class="form-control form-control-lg" asp-items="Model.Customers" asp-for="CustomerSelected"> 
+            <option value="-1">---Select Customer---</option>
+        </select>
+        </div>
+        <div class="mb-3">
+        <label asp-for="OrderStatus">Order Status</label>
+        <select class="form-control form-control-lg" asp-items="Html.GetEnumSelectList<OrderStatus>()" asp-for="OrderStatus"> 
+        </select>
+        </div>
+        <div class="mb-3">
+            <label asp-for="OrderedOn">Ordered On</label>
+            <input type="date" value="@DateTime.UtcNow;" asp-for="OrderedOn" class="form-control form-control-lg" placeholder="OrderedOn" />
+            <span asp-validation-for="OrderedOn" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="DeliveryDate">Delivery Date</label>
+            <input type="date" value="@DateTime.UtcNow;" asp-for="DeliveryDate" class="form-control form-control-lg" placeholder="DeliveryDate" />
+            <span asp-validation-for="DeliveryDate" class="text-danger"></span>
+        </div>
+        <div class="form-row form-group">
+            <div class="col">
+                 <button class="btn btn-block btn-success btn-lg" type="submit">Add Order</button>
+            </div>
+        </div>
+    </form>
+</div>
