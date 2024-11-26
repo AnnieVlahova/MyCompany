@@ -137,9 +137,25 @@ namespace MyCompanyWeb.Controllers
             Order orderDetails = await _orderRepository.GetOrderById(id);
             return View(orderDetails);
         }
+        [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
-            Order orderDetails = await _orderRepository.GetOrderById(id);
+            var order = await _orderRepository.GetOrderById(id);
+            if (order == null) return View("Error");
+            return View(order);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> DeleteOrder(int id)
+        {
+            var order = await _orderRepository.GetOrderById(id);
+
+            if (order == null)
+            {
+                return View("Error");
+            }
+
+            _orderRepository.Delete(order);
             return RedirectToAction("Index");
         }
 

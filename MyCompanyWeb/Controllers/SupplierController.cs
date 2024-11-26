@@ -28,11 +28,6 @@ namespace MyCompanyWeb.Controllers
             Supplier supplierDetails = await _supplierRepository.GetById(id);
             return View(supplierDetails);
         }
-        public async Task<IActionResult> Delete(int id)
-        {
-            Supplier supplierDetails = await _supplierRepository.GetById(id);
-            return View(supplierDetails);
-        }
         [HttpGet]
         public IActionResult Add()
         {
@@ -92,6 +87,27 @@ namespace MyCompanyWeb.Controllers
                 Address = supplierDM.Address
             };
             _supplierRepository.Edit(supplier);
+            return RedirectToAction("Index");
+        }
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var supplier = await _supplierRepository.GetById(id);
+            if (supplier == null) return View("Error");
+            return View(supplier);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> DeleteSupplier(int id)
+        {
+            var supplier = await _supplierRepository.GetById(id);
+
+            if (supplier == null)
+            {
+                return View("Error");
+            }
+
+            _supplierRepository.Delete(supplier);
             return RedirectToAction("Index");
         }
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

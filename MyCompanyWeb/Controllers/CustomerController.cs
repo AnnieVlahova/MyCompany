@@ -74,11 +74,6 @@ namespace MyCompanyWeb.Controllers
 
             
         }
-        public async Task<IActionResult> Delete(int id)
-        {
-            Customer customerDetails = await _customerRepository.GetById(id);
-            return View(customerDetails);
-        }
         [HttpGet]
         public IActionResult Add()
         {
@@ -106,6 +101,27 @@ namespace MyCompanyWeb.Controllers
             _customerRepository.Add(customer);
             return RedirectToAction("Index");
 
+        }
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var customer = await _customerRepository.GetById(id);
+            if (customer == null) return View("Error");
+            return View(customer);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> DeleteCustomer(int id)
+        {
+            var customer = await _customerRepository.GetById(id);
+
+            if (customer == null)
+            {
+                return View("Error");
+            }
+
+            _customerRepository.Delete(customer);
+            return RedirectToAction("Index");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
