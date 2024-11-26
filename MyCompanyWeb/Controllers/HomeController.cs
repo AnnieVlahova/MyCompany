@@ -37,11 +37,6 @@ namespace MyCompanyWeb.Controllers
             Product productDetails = await _homeRepository.GetProductById(id);
             return View(productDetails);
         }
-        public async Task<IActionResult> Delete(int id)
-        {
-            Product productDetails = await _homeRepository.GetProductById(id);
-            return View(productDetails);
-        }
 
         public IActionResult Privacy()
         {
@@ -199,6 +194,27 @@ namespace MyCompanyWeb.Controllers
             };
 
             _homeRepository.Edit(product);
+            return RedirectToAction("Index");
+        }
+        [HttpGet]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var product = await _homeRepository.GetProductById(id);
+            if (product == null) return View("Error");
+            return View(product);
+        }
+
+        [HttpPost, ActionName("Delete")]
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            var product = await _homeRepository.GetProductById(id);
+
+            if (product == null)
+            {
+                return View("Error");
+            }
+
+            _homeRepository.Delete(product);
             return RedirectToAction("Index");
         }
 
