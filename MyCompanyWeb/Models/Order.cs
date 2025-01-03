@@ -14,7 +14,7 @@ namespace MyCompanyWeb.Models
         public int CustomerId { get; set; }
         public Customer? Customer { get; set; }
         public OrderStatus? OrderStatus { get; set; }
-        public DateTime OrderedOn { get; set; } = DateTime.UtcNow;
+        public DateTime? OrderedOn { get; set; } = DateTime.UtcNow;
         public DateTime? DeliveryDate { get; set; }
         public bool? IsActive { get; set; } = false;
         public double? Subtotal { get; set; }

@@ -59,7 +59,6 @@ namespace MyCompanyWeb.Repositories
         }
         public bool Edit(Order order)
         {
-            _db.Entry(order).State = EntityState.Modified;
             _db.Update(order);
             return Save();
         }
