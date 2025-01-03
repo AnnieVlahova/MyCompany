@@ -1,0 +1,1 @@
+An ASP.NET Core MVC application for managing Orders, Products, Customers, and Suppliers. This project streamlines business operations for tracking orders, managing inventory, and organizing customer and supplier data.
