@@ -1,7 +1,7 @@
 ﻿@model EditProductDisplayModel
 @{
 }
-<div class="my-2"> 
+<div class="my-2">
     <p>Edit</p>
     <form method="post" asp-action="Edit" enctype="multipart/form-data">
         <input type="hidden" id="ProductTypeId" name="ProductTypeId" asp-for="ProductTypeId" />
@@ -39,18 +39,19 @@
             <span asp-validation-for="InStock" class="text-danger"></span>
         </div>
         <div class="mb-3">
-        <label asp-for="ProductTypeSelected">Product Type</label>
-        <select class="form-control form-control-lg" asp-items="Model.ProductTypes" asp-for="ProductTypeSelected">
-        </select>
+            <label asp-for="ProductTypeSelected">Product Type</label>
+            <select class="form-control form-control-lg" asp-items="Model.ProductTypes" asp-for="ProductTypeSelected">
+            </select>
         </div>
         <div class="mb-3">
-        <label asp-for="SupplierSelected">Supplier</label>
-        <select class="form-control form-control-lg" asp-items="Model.Suppliers" asp-for="SupplierSelected">
-        </select>
+            <label asp-for="SupplierSelected">Supplier</label>
+            <select class="form-control form-control-lg" asp-items="Model.Suppliers" asp-for="SupplierSelected">
+            </select>
         </div>
         <div class="form-row form-group">
             <div class="col">
-                 <button class="btn btn-block btn-success btn-lg" type="submit">Edit</button>
+                <button class="btn btn-block btn-success btn-lg" type="submit">Edit</button>
+                <a href="/Home/Index" class="btn btn-secondary">Cancel</a>
             </div>
         </div>
     </form>

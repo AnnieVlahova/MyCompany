@@ -59,6 +59,7 @@ namespace MyCompanyWeb.Repositories
         }
         public bool Edit(Order order)
         {
+            _db.Entry(order).State = EntityState.Modified;
             _db.Update(order);
             return Save();
         }
@@ -67,11 +68,11 @@ namespace MyCompanyWeb.Repositories
             var saved = _db.SaveChanges();
             return saved > 0 ? true : false;
         }
-        public async Task<IEnumerable<Order>> GetOrders(OrderStatus orderStatus, string customerName)
+        public async Task<IEnumerable<Order>> GetOrders(string customerName, OrderStatus? orderStatus = null)
         {
             var orders = await _db.Orders.Include(o => o.Customer).Include(p => p.OrderProducts).ToListAsync();
-            if(orderStatus != OrderStatus.Undefined)
-                orders = orders.Where(or => or.OrderStatus == orderStatus).ToList();
+            if(orderStatus.HasValue)
+                orders = orders.Where(or => or.OrderStatus == orderStatus.Value).ToList();
             if (!String.IsNullOrEmpty(customerName))
                 orders = orders.Where(o => o.Customer.Name.StartsWith(customerName)).ToList();
 

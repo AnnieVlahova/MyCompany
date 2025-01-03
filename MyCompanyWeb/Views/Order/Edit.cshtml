@@ -1,5 +1,155 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using MyCompanyWeb.Data.Enum
+@model EditOrderDisplayModel
 @{
 }
+<div class="my-2"> 
+    <p>Edit Order</p>
+    <form asp-action="Add" method="get" id="filterForm">
+    <label for="ProductType">Filter by Product Type:</label>
+    <select asp-for="SelectedProductType" asp-items="@Model.ProductTypes" onchange="this.form.submit()">
+        <option value="">All Types</option>
+    </select>
+    </form>
+
+    <form method="post" asp-action="Edit" enctype="multipart/form-data">
+        <input type="hidden" id="CustomerId" name="CustomerId" asp-for="CustomerId" />
+        <input type="hidden" id="Customer" name="Customer" asp-for="Customer" />
+        <div class="mb-3">      
+        <table class="table">
+        <thead>
+            <tr>
+                <th>Select</th>
+                <th>Product Type</th>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Discount (%)</th>
+                <th>Final Price</th>
+            </tr>
+        </thead>
+        <tbody>
+             @if (Model.AllProducts != null && Model.AllProducts.Any())
+            {
+                @for (var i = 0; i < Model.AllProducts.Count; i++)
+                {
+                    <div class="product-row" id="productRow_@i">
+                    <tr>
+                    <td>
+                        <input type="checkbox" id="selected_@i" asp-for="@Model.SelectedProducts[i].Selected" value="@Model.AllProducts[i].Selected" />
+                        <input type="hidden" asp-for="@Model.SelectedProducts[i].ProductId" value="@Model.AllProducts[i].ProductId" />
+                    </td>
+                    <td>@Model.AllProducts[i].Product.ProductType.Name</td>
+                    <td>@Model.AllProducts[i].Product.Name</td>
+                    <td>
+                    <input type="text" id="price_@i" asp-for="@Model.SelectedProducts[i].Price" value="@Model.AllProducts[i].Price" readonly/></td>
+                    <td>
+                        <input type="text" asp-for="@Model.SelectedProducts[i].Quantity" id="quantity_@i" min="1" value="@Model.SelectedProducts[i].Quantity" />
+                    </td>
+                    <td>
+                        <input type="text" asp-for="@Model.SelectedProducts[i].Discount" id="discount_@i" min="0" max="100" value="@Model.SelectedProducts[i].Discount" />
+                    </td>
+                    <td>
+                        <input type="text" asp-for="@Model.SelectedProducts[i].FinalPrice" id="finalPrice_@i" value="@Model.SelectedProducts[i].FinalPrice" />
+                    </td>
+                </tr>
+                </div>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="3">No products found for the selected type.</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="mb-3">
+            <label>Total</label>
+            <input class="form-control form-control-lg" name="Subtotal" asp-for="Subtotal" id="totalSum" value="Subtotal" readonly></input>
+    </div>
+    </div> 
+        <div class="mb-3">
+        <label asp-for="CustomerSelected">Customer</label>
+        <select class="form-control form-control-lg" asp-items="Model.Customers" asp-for="CustomerSelected" value="CustomerSelected"> 
+            <option value="-1">---Select Customer---</option>
+        </select>
+        </div>
+        <div class="mb-3">
+        <label asp-for="OrderStatus">Order Status</label>
+        <select class="form-control form-control-lg" asp-items="Html.GetEnumSelectList<OrderStatus>()" asp-for="OrderStatus"> 
+        </select>
+        </div>
+        <div class="mb-3">
+            <label asp-for="OrderedOn">Ordered On</label>
+            <input type="date" value="OrderedOn" asp-for="OrderedOn" class="form-control form-control-lg" placeholder="OrderedOn" />
+            <span asp-validation-for="OrderedOn" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="DeliveryDate">Delivery Date</label>
+            <input type="date" value="DeliveryDate" asp-for="DeliveryDate" class="form-control form-control-lg" placeholder="DeliveryDate" />
+            <span asp-validation-for="DeliveryDate" class="text-danger"></span>
+        </div>
+        <div class="form-row form-group">
+            <div class="col">
+                 <button class="btn btn-block btn-success btn-lg" type="submit">Edit</button>
+                 <a href="/Order/Index" class="btn btn-secondary">Cancel</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Function to calculate and update the total sum
+        function updateTotalSum() {
+            let totalSum = 0;
+
+            // Iterate over all final price inputs
+            for (let i = 0; i < @Model.SelectedProducts.Count; i++) {
+                let finalPrice = parseFloat($("#finalPrice_" + i).val());
+                if (!isNaN(finalPrice)) {
+                    totalSum += finalPrice;
+                }
+            }
+
+            // Update the total sum display
+            $("#totalSum").val(totalSum.toFixed(2));
+        }
+
+        // Attach event listeners to each row using a for loop
+        for (let i = 0; i < @Model.SelectedProducts.Count; i++) {
+            function calculateFinalPrice() {
+                let price = parseFloat($("#price_" + i).val());
+                let quantity = parseInt($("#quantity_" + i).val());
+                let discount = parseFloat($("#discount_" + i).val());
+                let isSelected = $("#selected_" + i).is(":checked");
+
+                // Only calculate the final price if the product is selected
+                if (isSelected && !isNaN(price) && !isNaN(quantity) && !isNaN(discount)) {
+                    let finalPrice = (price * quantity) - ((price * quantity) * (discount / 100));
+                    $("#finalPrice_" + i).val(finalPrice.toFixed(2));
+                } else {
+                    // Clear the final price if the product is not selected
+                    $("#finalPrice_" + i).val("0");
+                }
+
+                // Update the total sum whenever a final price changes
+                updateTotalSum();
+            }
+
+            // Bind the calculation function to quantity and discount input changes
+            $("#quantity_" + i + ", #discount_" + i).on("input", function () {
+                calculateFinalPrice();
+            });
+
+            // Bind the calculation function to checkbox change
+            $("#selected_" + i).on("change", function () {
+                calculateFinalPrice();
+            });
+        }
+
+        // Initialize the total sum on page load
+        updateTotalSum();
+    });
+</script>

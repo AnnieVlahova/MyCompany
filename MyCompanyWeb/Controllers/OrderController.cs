@@ -14,9 +14,9 @@ namespace MyCompanyWeb.Controllers
             _orderRepository = orderRepository;
             _logger = logger;
         }
-        public async Task<IActionResult> Index(OrderStatus orderStatus, string customerName)
+        public async Task<IActionResult> Index(string customerName, OrderStatus? orderStatus = null)
         {
-            IEnumerable<Order> orders = await _orderRepository.GetOrders(orderStatus, customerName);
+            IEnumerable<Order> orders = await _orderRepository.GetOrders(customerName, orderStatus);
             OrderDisplayModel orderDM = new OrderDisplayModel
             {
                 Orders = orders
@@ -45,7 +45,8 @@ namespace MyCompanyWeb.Controllers
                     Price = prod.Price,
                     Selected = false,
                     Quantity = 1,
-                    Discount = 0
+                    Discount = 0, 
+                    FinalPrice = 0
                 };
                 orderProds.Add(op);
             }
@@ -61,10 +62,7 @@ namespace MyCompanyWeb.Controllers
             }
             selectList = selectList.OrderByDescending(p => p.Selected).ToList();
         }
-        private void populateSeletedProductsList()
-        {
-
-        }
+        
         [HttpGet]
         public async Task<IActionResult> Add(AddOrderDisplayModel orderDM = null, string? productTypeId = null)
         {
@@ -74,17 +72,14 @@ namespace MyCompanyWeb.Controllers
             orderDM.Customers = customersL;
 
             var prodTypes = await _orderRepository.GetProductTypes();
-            //string selectedProdType = orderDM.SelectedProductType;
             var productTypesL = new List<SelectListItem>();
             populateSelectList(prodTypes, ref productTypesL);
             orderDM.ProductTypes = productTypesL;
-            //int? prodTypeId = null;
-            //if (selectedProdType != null)
-            //{
-            //    prodTypeId = Int32.Parse(selectedProdType);
-            //}
             orderDM.AllProducts = await populateOrderProducts();
-            orderDM.SelectedProducts = orderDM.SelectedProducts;
+            orderDM.SelectedProducts = orderDM.AllProducts;
+
+            orderDM.OrderedOn = DateTime.Now.Date;
+            orderDM.DeliveryDate = DateTime.Now.Date;
 
             return View(orderDM);
         }
@@ -93,6 +88,11 @@ namespace MyCompanyWeb.Controllers
         {
             if(!ModelState.IsValid)
             {
+                var errors = ModelState.Values.SelectMany(v => v.Errors);
+                foreach (var error in errors)
+                {
+                    Console.WriteLine(error.ToString());
+                }
                 return View(orderDM);
             }
             int selectedCustomer = Int32.Parse(orderDM.CustomerSelected);
@@ -109,6 +109,8 @@ namespace MyCompanyWeb.Controllers
                 OrderStatus = orderDM.OrderStatus,
                 OrderedOn = orderDM.OrderedOn,
                 DeliveryDate = orderDM.DeliveryDate,
+                Subtotal = orderDM.Subtotal,
+                IsActive = isActive
             };
             List<OrderProduct> orderProducts = new List<OrderProduct>();
             foreach(AddOrderProduct aop in orderDM.SelectedProducts)
@@ -123,7 +125,8 @@ namespace MyCompanyWeb.Controllers
                         Product = aop.Product,
                         Price = aop.Price,
                         Discount = aop.Discount,
-                        Quantity = aop.Quantity
+                        Quantity = aop.Quantity,
+                        FinalPrice = aop.FinalPrice
                     };
                     orderProducts.Add(op);
                 }
@@ -137,6 +140,119 @@ namespace MyCompanyWeb.Controllers
             Order orderDetails = await _orderRepository.GetOrderById(id);
             return View(orderDetails);
         }
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var order = await _orderRepository.GetOrderById(id);
+            if (order == null)
+                return View("Error");
+            var prodTypes = await _orderRepository.GetProductTypes();
+            var customers = await _orderRepository.Customers();
+            var prodTypesL = new List<SelectListItem>();
+            var customersL = new List<SelectListItem>();
+            populateSelectList(prodTypes, ref prodTypesL);
+            populateSelectList(customers, ref customersL, order.CustomerId);
+            var orderDM = new EditOrderDisplayModel
+            {
+                Id = id,
+                ProductTypes = prodTypesL,
+                Customers = customersL,
+                CustomerId = order.CustomerId,
+                Customer = order.Customer,
+                OrderStatus = order.OrderStatus,
+                OrderedOn = order.OrderedOn,
+                DeliveryDate = order.DeliveryDate,
+                Subtotal = order.Subtotal,
+                CustomerSelected = order.Customer.Id.ToString(),
+                IsActive = order.IsActive
+            };
+            orderDM.AllProducts = await populateOrderProducts();
+            foreach (OrderProduct op in order.OrderProducts)
+            {
+                var currSelected = orderDM.AllProducts.Where(sp => sp.ProductId == op.ProductId).FirstOrDefault();
+                currSelected.Selected = true;
+                currSelected.Quantity = op.Quantity;
+                currSelected.Discount = op.Discount;
+                currSelected.FinalPrice = op.FinalPrice;
+            }
+            orderDM.SelectedProducts = orderDM.AllProducts;
+
+            return View(orderDM);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, EditOrderDisplayModel orderDM)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View("Edit", orderDM);
+            }
+
+            var existingOrder = await _orderRepository.GetOrderById(id);
+            if (existingOrder == null)
+            {
+                return View("Error");
+            }
+
+            //// Update basic order details
+            int selectedCustomer = Int32.Parse(orderDM.CustomerSelected);
+            if (selectedCustomer > -1)
+            {
+                orderDM.CustomerId = selectedCustomer;
+                orderDM.Customer = await _orderRepository.GetCustomerById(selectedCustomer);
+            }
+
+            existingOrder.CustomerId = orderDM.CustomerId;
+            existingOrder.Customer = orderDM.Customer;
+            existingOrder.OrderStatus = orderDM.OrderStatus;
+            existingOrder.OrderedOn = orderDM.OrderedOn;
+            existingOrder.DeliveryDate = orderDM.DeliveryDate;
+            existingOrder.Subtotal = orderDM.Subtotal;
+            existingOrder.IsActive = orderDM.OrderStatus.Value != OrderStatus.Delivered;
+
+            // Update products only if there are changes
+            foreach (AddOrderProduct aop in orderDM.SelectedProducts)
+            {
+                // Check if the product already exists in the order
+                var existingProduct = existingOrder.OrderProducts.FirstOrDefault(op => op.ProductId == aop.ProductId);
+
+                if (aop.Selected && aop.Quantity > 0)
+                {
+                    if (existingProduct != null)
+                    {
+                        // Update the existing product
+                        existingProduct.Quantity = aop.Quantity;
+                        existingProduct.Discount = aop.Discount;
+                        existingProduct.FinalPrice = aop.FinalPrice;
+                    }
+                    else
+                    {
+                        // Add new product
+                        OrderProduct newProduct = new OrderProduct
+                        {
+                            OrderId = existingOrder.Id,
+                            ProductId = aop.ProductId,
+                            Product = aop.Product,
+                            Price = aop.Price,
+                            Discount = aop.Discount,
+                            Quantity = aop.Quantity,
+                            FinalPrice = aop.FinalPrice
+                        };
+                        existingOrder.OrderProducts.Add(newProduct);
+                    }
+                }
+                else if (existingProduct != null)
+                {
+                    // Remove unselected or zero-quantity products
+                    existingOrder.OrderProducts.Remove(existingProduct);
+                }
+            }
+
+            // Save changes to the repository
+            _orderRepository.Edit(existingOrder);
+
+            return RedirectToAction("Index");
+        }
+
         [HttpGet]
         public async Task<IActionResult> Delete(int id)
         {
