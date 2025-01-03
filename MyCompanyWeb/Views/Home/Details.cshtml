@@ -36,7 +36,9 @@
             {
                 <a class="btn btn-outline-success float-right" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
             }*@
-            <a href="/Home/Index" class="btn btn-secondary">Show All</a>
+            
+            <a type="button" asp-controller="Home" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+            <a type="button" href="/Home/Index" class="btn btn-secondary">Show All</a>
         </div>
     </form>
 </div>

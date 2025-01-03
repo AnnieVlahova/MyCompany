@@ -85,12 +85,12 @@
         </div>
         <div class="mb-3">
             <label asp-for="OrderedOn">Ordered On</label>
-            <input type="date" value="@DateTime.Now.ToString("MM/dd/yyyy")" asp-for="OrderedOn" class="form-control form-control-lg" placeholder="OrderedOn" />
+            <input type="date" value="@Model.OrderedOn?.ToString("yyyy-MM-dd")" asp-for="OrderedOn" class="form-control form-control-lg" placeholder="OrderedOn" />
             <span asp-validation-for="OrderedOn" class="text-danger"></span>
         </div>
         <div class="mb-3">
             <label asp-for="DeliveryDate">Delivery Date</label>
-            <input type="date" value="DeliveryDate?.ToString("MM/dd/yyyy") ?? DateTime.Now.ToString("MM/dd/yyyy")" asp-for="DeliveryDate" class="form-control form-control-lg" placeholder="DeliveryDate" />
+            <input type="date" value="@Model.DeliveryDate?.ToString("yyyy-MM-dd")" asp-for="DeliveryDate" class="form-control form-control-lg" placeholder="DeliveryDate" />
             <span asp-validation-for="DeliveryDate" class="text-danger"></span>
         </div>
         <div class="form-row form-group">
