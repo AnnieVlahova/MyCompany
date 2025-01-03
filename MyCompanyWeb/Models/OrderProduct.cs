@@ -23,6 +23,7 @@ namespace MyCompanyWeb.Models
         public double? Discount { get; set; } = 0;
         [Required]
         public int? Quantity { get; set; }
+        public double? FinalPrice { get; set; }
 
     }
 }

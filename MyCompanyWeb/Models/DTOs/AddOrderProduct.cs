@@ -8,6 +8,7 @@
         public double? Discount { get; set; } = 0;
         public int? Quantity { get; set; } = 0;
         public bool Selected { get; set; }
+        public double? FinalPrice { get; set; }
 
     }
 }

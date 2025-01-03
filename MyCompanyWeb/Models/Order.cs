@@ -17,6 +17,7 @@ namespace MyCompanyWeb.Models
         public DateTime OrderedOn { get; set; } = DateTime.UtcNow;
         public DateTime? DeliveryDate { get; set; }
         public bool? IsActive { get; set; } = false;
+        public double? Subtotal { get; set; }
 
         public List<OrderProduct>? OrderProducts { get; set; }
 

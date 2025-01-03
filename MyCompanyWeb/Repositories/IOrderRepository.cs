@@ -4,7 +4,7 @@ namespace MyCompanyWeb.Repositories
 {
     public interface IOrderRepository
     {
-        Task<IEnumerable<Order>> GetOrders(OrderStatus orderStatus, string customerName = "");
+        Task<IEnumerable<Order>> GetOrders(string customerName = "", OrderStatus? orderStatus = null);
         Task<Order> GetOrderById(int id);
         Task<Customer> GetCustomerById(int id);
         Task<IEnumerable<Product>> Products(int? productTypeId = null);

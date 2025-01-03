@@ -7,7 +7,7 @@
         <div class="col-12">
             <label class="visually-hidden" for="orderStatus">Status</label>
             <select class="form-select" id="orderStatus" name="orderStatus">
-                <option selected>@OrderStatus.Undefined</option>
+                <option selected></option>
                 @foreach (var status in Html.GetEnumSelectList<OrderStatus>())
                 {
                     <option value="@status.Value">@status.Text</option>
@@ -39,7 +39,7 @@
                 <th scope="col">Ordered On</th>
                 <th scope="col">Delivery Date</th>
                 <th scope="col">Is Delivered</th>
-                <th scope="col"></th>
+                <th scope="col">Subtotal</th>
             </tr>
         </thead>
         <tbody>
@@ -51,6 +51,7 @@
                 <td>@order.OrderedOn</td>
                 <td>@order.DeliveryDate</td>
                 <td><div type="checkbox" class="form-control" id="isDelivered" readonly>@order.IsActive</td>
+                <td>@order.Subtotal</td>
                 <td><a type="button" asp-controller="Order" asp-action="Details" asp-route-id="@order.Id" class="btn btn-primary">See Details</a></td>
                 <td><a type="button" asp-controller="Order" asp-action="Edit" asp-route-id="@order.Id" class="btn btn-primary">Edit</a></td>
                 <td><a type="button" asp-controller="Order" asp-action="Delete" asp-route-id="@order.Id" class="btn btn-primary">Delete</a></td>
